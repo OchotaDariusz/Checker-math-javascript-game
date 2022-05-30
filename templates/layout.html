@@ -11,8 +11,11 @@
 </head>
 <body>
 
+{% include 'popup.html' %}
+
 {% block body %}{% endblock %}
 
-<script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/game.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/popup.js') }}"></script>
 </body>
 </html>
