@@ -6,12 +6,11 @@ CREATE TABLE users
 (
     id                  serial NOT NULL,
     username            text,
-    email               text,
     password            text,
     level               integer,
     points              integer,
     registration_time   timestamp without time zone
 );
 
-INSERT INTO users (username, email, password, level, points, registration_time)
-VALUES ('FreeStyleGame','freestyle@game.com', '$2b$12$X23o0b5QEBe2nufX.swaduA/mdu0puzjjkcVnoIuoBrkFCEH7j8zy', 0, 0 , '2022-05-30 14:05:00');
+INSERT INTO users (username, password, level, points, registration_time)
+VALUES ('FreeStyleGame', '$2b$12$X23o0b5QEBe2nufX.swaduA/mdu0puzjjkcVnoIuoBrkFCEH7j8zy', 0, 0 , '2022-05-30 14:05:00');

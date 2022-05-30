@@ -1,5 +1,7 @@
+{% if user_logged_in %}
+{% else %}
 <div class="popup">
-    <form class="form">
+    <form class="form" id="signin">
         <div class="popup-header">Login</div>
         <label for="username-login">USERNAME:</label>
         <input id="username-login" type="text" required>
@@ -10,7 +12,7 @@
     </form>
 </div>
 <div class="popup-register">
-    <form class="form">
+    <form class="form" id="signup">
         <div class="popup-header">Register</div>
         <label for="username-register">USERNAME:</label>
         <input id="username-register" type="text" required>
@@ -18,7 +20,8 @@
         <input id="password-register" type="password" minlength="6" placeholder="Min. 3 characters long" required>
         <label for="password2-register">REP.PASSWORD:</label>
         <input id="password2-register" type="password" minlength="6" placeholder="Repeat your password..." required>
-        <button type="submit">Submit</button>
+        <button type="submit">Register</button>
         <button type="button" class="popup-link">Login</button>
     </form>
 </div>
+{% endif %}

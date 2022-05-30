@@ -5,7 +5,15 @@
 {% block body %}
 
     <div class="container">
-        <h1>Game</h1>
+        {% if user_logged_in %}
+            <form action="{{ url_for('logout') }}" method="post">
+                <button type="submit" class="logout-button">
+                    <i id="logout" class="fas fa-power-off"></i>
+                </button>
+            </form>
+        {% else %}
+            <i id="login" class="fas fa-power-off"></i>
+        {% endif %}
         <div class="game-box">
             <div class="stats-bg"></div>
             <div class="timer">TIME LEFT</div>

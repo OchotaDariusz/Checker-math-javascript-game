@@ -1,23 +1,84 @@
-const form = document.querySelector('.form');
-const firstInput = document.querySelector('#input1');
-const secondInput = document.querySelector('#input2');
+const loginForm = document.querySelector('#signin');
+const registerForm = document.querySelector('#signup');
+const form = document.querySelectorAll('.form');
+const usernameLogin = document.querySelector('#username-login');
+const passwordLogin = document.querySelector('#password-login');
+const usernameRegister = document.querySelector('#username-register');
+const passwordRegister = document.querySelector('#password-register');
+const passwordRegister2 = document.querySelector('#password2-register');
 const popup = document.querySelector('.popup');
 const popupRegister = document.querySelector('.popup-register');
 const gameBox = document.querySelector('.game-box');
 const popupLink = document.querySelectorAll('.popup-link');
+const login = document.querySelector('#login');
+const logout = document.querySelector('#logout');
 
-form.addEventListener('submit', event => {
+loginForm.addEventListener('submit', event => {
     event.preventDefault();
-    console.log(form.input1.value);
-    alert(`1st: ${firstInput.value}`);
-    alert(`2nd: ${secondInput.value}`);
-    firstInput.value = '';
-    secondInput.value = '';
+    console.log(usernameLogin.value); // TO DELETE
+    console.log(passwordLogin.value); // TO DELETE
+    console.log(`${window.location.href}login`); // TO DELETE
+
+    const urlTarget = `${window.location.href}login`;
+
+    const userData = {
+        username: usernameLogin.value,
+        password: passwordLogin.value
+    };
+
+    fetch(urlTarget, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = data['url'];
+        })
+        .catch(error => console.error(error));
+
+    loginForm.reset();
     closePopup();
 });
 
-form.addEventListener('click', event => {
-    event.stopPropagation();
+registerForm.addEventListener('submit', event => {
+    event.preventDefault();
+    console.log(usernameRegister.value); // TO DELETE
+    console.log(passwordRegister.value); // TO DELETE
+    console.log(passwordRegister2.value); // TO DELETE
+    console.log(`${window.location.href}registration`); // TO DELETE
+
+    const urlTarget = `${window.location.href}registration`;
+
+    const userData = {
+        username: usernameRegister.value,
+        password: passwordRegister.value,
+        password2: passwordRegister2.value
+    };
+
+    fetch(urlTarget, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(userData),
+    })
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = data['url'];
+        })
+        .catch(error => console.error(error));
+
+    registerForm.reset();
+    closeRegisterPopup();
+});
+
+form.forEach(item => {
+    item.addEventListener('click', event => {
+        event.stopPropagation();
+    });
 });
 
 popup.addEventListener('click', () => {
@@ -87,3 +148,7 @@ popupLink.forEach(link => {
 setTimeout(() => {
     showPopup();
 }, 750);
+
+login.addEventListener('click', () => {
+    showPopup();
+});
