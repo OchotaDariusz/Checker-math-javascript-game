@@ -1,11 +1,24 @@
 <div class="popup">
     <form class="form">
         <div class="popup-header">Login</div>
-        <label for="input1">First Input</label>
-        <input id="input1" type="text">
-        <label for="input2">Second Input</label>
-        <input id="input2" type="text" minlength="3" placeholder="Min. 3 characters long" required>
+        <label for="username-login">USERNAME:</label>
+        <input id="username-login" type="text" required>
+        <label for="password-login">PASSWORD:</label>
+        <input id="password-login" type="password" minlength="6" placeholder="Min. 3 characters long" required>
         <button type="submit">Submit</button>
-        <button class="popup-link">Register</button>
+        <button type="button" class="popup-link">Register</button>
+    </form>
+</div>
+<div class="popup-register">
+    <form class="form">
+        <div class="popup-header">Register</div>
+        <label for="username-register">USERNAME:</label>
+        <input id="username-register" type="text" required>
+        <label for="password-register">PASSWORD:</label>
+        <input id="password-register" type="password" minlength="6" placeholder="Min. 3 characters long" required>
+        <label for="password2-register">REP.PASSWORD:</label>
+        <input id="password2-register" type="password" minlength="6" placeholder="Repeat your password..." required>
+        <button type="submit">Submit</button>
+        <button type="button" class="popup-link">Login</button>
     </form>
 </div>
