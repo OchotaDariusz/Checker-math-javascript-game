@@ -15,9 +15,6 @@ const logout = document.querySelector('#logout');
 
 loginForm.addEventListener('submit', event => {
     event.preventDefault();
-    console.log(usernameLogin.value); // TO DELETE
-    console.log(passwordLogin.value); // TO DELETE
-    console.log(`${window.location.href}login`); // TO DELETE
 
     const urlTarget = `${window.location.href}login`;
 
@@ -40,15 +37,11 @@ loginForm.addEventListener('submit', event => {
         .catch(error => console.error(error));
 
     loginForm.reset();
-    closePopup();
+    closePopup(popup);
 });
 
 registerForm.addEventListener('submit', event => {
     event.preventDefault();
-    console.log(usernameRegister.value); // TO DELETE
-    console.log(passwordRegister.value); // TO DELETE
-    console.log(passwordRegister2.value); // TO DELETE
-    console.log(`${window.location.href}registration`); // TO DELETE
 
     const urlTarget = `${window.location.href}registration`;
 
@@ -72,7 +65,7 @@ registerForm.addEventListener('submit', event => {
         .catch(error => console.error(error));
 
     registerForm.reset();
-    closeRegisterPopup();
+    closePopup(popupRegister);
 });
 
 form.forEach(item => {
@@ -84,18 +77,22 @@ form.forEach(item => {
 popup.addEventListener('click', () => {
     popup.classList.remove('fade-in')
     popup.classList.add('fade-out')
-    setTimeout(closePopup, 400);
+    setTimeout( () => {
+        closePopup(popup);
+    }, 400);
 });
 
 popupRegister.addEventListener('click', () => {
     popupRegister.classList.remove('fade-in')
     popupRegister.classList.add('fade-out')
-    setTimeout(closeRegisterPopup, 400);
+    setTimeout(() => {
+        closePopup(popupRegister);
+    }, 400);
 });
 
-const closePopup = () => {
-    popup.classList.remove('fade-in')
-    popup.style.display = 'none';
+const closePopup = element => {
+    element.classList.remove('fade-in')
+    element.style.display = 'none';
     Array.from(gameBox.children).forEach(children => {
         children.style.filter = '';
     });
@@ -105,50 +102,50 @@ function refreshPopupLink() {
     const popupLink = document.querySelector('.popup-link');
 }
 
-const showPopup = () => {
-    popup.classList.add('fade-in');
-    popup.classList.remove('fade-out');
-    popup.style.display = 'flex';
+const showPopup = element => {
+    element.classList.add('fade-in');
+    element.classList.remove('fade-out');
+    element.style.display = 'flex';
     Array.from(gameBox.children).forEach(children => {
         children.style.filter = 'blur(4px)';
     });
     refreshPopupLink();
 }
 
-const closeRegisterPopup = () => {
-    popupRegister.classList.remove('fade-in');
-    popupRegister.style.display = 'none';
-    Array.from(gameBox.children).forEach(children => {
-        children.style.filter = '';
-    });
-}
+// const closeRegisterPopup = () => {
+//     popupRegister.classList.remove('fade-in');
+//     popupRegister.style.display = 'none';
+//     Array.from(gameBox.children).forEach(children => {
+//         children.style.filter = '';
+//     });
+// }
 
-const showRegisterPopup = () => {
-    popupRegister.classList.add('fade-in');
-    popupRegister.classList.remove('fade-out');
-    popupRegister.style.display = 'flex';
-    Array.from(gameBox.children).forEach(children => {
-        children.style.filter = 'blur(4px)';
-    });
-    refreshPopupLink();
-};
+// const showRegisterPopup = () => {
+//     popupRegister.classList.add('fade-in');
+//     popupRegister.classList.remove('fade-out');
+//     popupRegister.style.display = 'flex';
+//     Array.from(gameBox.children).forEach(children => {
+//         children.style.filter = 'blur(4px)';
+//     });
+//     refreshPopupLink();
+// };
 
 popupLink.forEach(link => {
     link.addEventListener('click', () => {
         if (popupRegister.style.display === 'flex') {
-            closeRegisterPopup();
-            showPopup();
+            closePopup(popupRegister);
+            showPopup(popup);
         } else if (popup.style.display === 'flex') {
-            closePopup();
-            showRegisterPopup();
+            closePopup(popup);
+            showPopup(popupRegister);
         }
     });
 });
 
 setTimeout(() => {
-    showPopup();
+    showPopup(popup);
 }, 750);
 
 login.addEventListener('click', () => {
-    showPopup();
+    showPopup(popup);
 });
