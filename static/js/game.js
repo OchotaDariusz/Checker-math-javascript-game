@@ -1,4 +1,4 @@
-MIN_DIFFERENCE = 4;
+MIN_DIFFERENCE = 3;
 
 class Operation {
   constructor(operand1, operator, operand2) {
@@ -21,7 +21,7 @@ class Operation {
         return this._operand1 - this._operand2;
       case "*":
         return this._operand1 * this._operand2;
-      case "/":
+      case ":":
         return this._operand1 / this._operand2;
       default:
         console.log("invalid operation")
@@ -33,7 +33,7 @@ class Operation {
 initGame();
 
 
-function initGame() {
+function initGame()  {
   const init_value = 5;
   const goal_value = 6;
   const operationsPair1 = ["* 4", "+ 13"];
@@ -58,13 +58,59 @@ function getPairOfDecreasingOperations(value, nmbOfSteps, level) {
   return [operation1, operation2];
 }
 
-function getPairOfIncreasingOperations()
+function getPairOfIncreasingOperations() {
+  const factor = 2;
+}
 
 
-function setGoalValue(level) {
-  let min = 10 * level;
-  let max = 50 * level;
+function getInitValue(level) {
+  let min = 1 * level;
+  let max = 20 * level;
   return getRndInteger(min, max);
+}
+
+function getMaxResult(level) {
+  return 40 * level;
+}
+
+const initValue = getInitValue(level)
+function getCorrectOperations(initValue, level) {
+  const operators = ["+", "*", "-", ":"];
+  let operations = [];
+  let x = initValue;
+  let count = 1;
+  while (count <= 2) {
+    let operator = getRndOperator(x, level);
+    let operand;
+    if (operator === ":" && getProperDivisors(x).length == 0) continue;
+    operand = getRndOperand(x, operator, level);
+    let operation = new Operation(x, operator, operand);
+    operations.push(operation);
+    x = operation.getResult();
+    count++;
+  }
+}
+
+function getRndOperator(initValue, level) {
+
+}
+
+function getRndOperand(value, operator, level) {
+  let maxResult = getMaxResult(level)
+  switch (operator) {
+    case "+":
+      return getRndInteger(MIN_DIFFERENCE, maxResult - value);
+    case "-":
+      return getRndInteger(MIN_DIFFERENCE, value - MIN_DIFFERENCE);
+    case "*":
+      let maxFactor = Math.floor(maxResult / value);
+      return getRndInteger(2, maxFactor);
+    case ":":
+      const divisors = getProperDivisors(value);
+      return getRndElement(divisors);
+    default:
+      console.log("cannot get operand");
+  }
 }
 
 function getRndInteger(min, max) {
@@ -81,4 +127,15 @@ function getProperDivisors(n) {
     if (n % i === 0) divisors.push(i);
   }
   return divisors;
+}
+
+function isPrime(n) {
+  for (let i = 2; i <= Math.sqrt(n); i++) {
+    if (n % i == 0) return false;
+  }
+  return true;
+}
+
+function getRndElement(arr) {
+  return arr[getRndInteger(0, arr.length - 1)];
 }
