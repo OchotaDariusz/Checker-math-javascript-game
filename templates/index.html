@@ -3,5 +3,27 @@
 {% block title %}JavaScript Game{% endblock %}
 
 {% block body %}
-<h1>TEST</h1>
+
+    <div class="container">
+        {% if user_logged_in %}
+            <form action="{{ url_for('logout') }}" method="post">
+                <button type="submit" class="logout-button">
+                    <i id="logout" class="fas fa-power-off"></i>
+                </button>
+            </form>
+        {% else %}
+            <i id="login" class="fas fa-power-off"></i>
+        {% endif %}
+        <div class="game-box">
+            <div class="stats-bg"></div>
+            <div class="timer">TIME LEFT</div>
+            <div class="stats">Use all buttons to<br>get x > 9</div>
+            <div class="user-details">USER</div>
+            <div class="score"><span>1</span></div>
+            <div class="box left-top disabled">left-top</div>
+            <div class="box right-top disabled">right-top</div>
+            <div class="box left-bottom">left-bottom</div>
+            <div class="box right-bottom">right-bottom</div>
+        </div>
+    </div>
 {% endblock %}
