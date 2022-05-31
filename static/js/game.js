@@ -7,6 +7,7 @@ function initGame() {
 }
 
 
+
 let countDownDate = new Date().getTime() + 10000
 
 
@@ -14,10 +15,10 @@ let x = setInterval(function() {
 
 
   let now = new Date().getTime();
-    
+
 
   let distance = countDownDate - now;
-    
+
 
 
   let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
