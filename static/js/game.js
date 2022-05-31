@@ -1,4 +1,8 @@
 MIN_DIFFERENCE = 3;
+OPERATIONS_LIMIT = 2;
+FACTOR_1 = 12;
+FACTOR_2 = 18;
+MAX_INIT_VALUE = 30;
 
 class Operation {
   constructor(operand1, operator, operand2) {
@@ -27,84 +31,72 @@ class Operation {
         console.log("invalid operation")
     }
   }
-}
 
-
-initGame();
-
-
-function initGame()  {
-  const init_value = 5;
-  const goal_value = 6;
-  const operationsPair1 = ["* 4", "+ 13"];
-  const operationsPair2 = [": 3", "- 11"];
-}
-
-
-function getPairOfDecreasingOperations(value, nmbOfSteps, level) {
-  let operation1;
-  const divisors = getProperDivisors(value);
-  if (divisors.length > 0) {
-    const divisor = divisors[getRndInteger(0, divisors.length - 1)];
-    operation1 = new Operation(value, "/", divisor);
-  } else {
-    const subtrahend = getRndInteger(MIN_DIFFERENCE, value - MIN_DIFFERENCE);
-    operation1 = new Operation(value, "-", subtrahend);
+  parseEndToString() {
+    return String(this.operator) + " " + String(this.operand2);
   }
-  let result1 = operation1.getResult();
-  let difference = value - result1;
-  const subtrahend = getRndInteger(subtrahend - MIN_DIFFERENCE, subtrahend + MIN_DIFFERENCE);
-  let operation2 = new Operation(value, "-", subtrahend);
-  return [operation1, operation2];
 }
 
-function getPairOfIncreasingOperations() {
-  const factor = 2;
+function initTurn(level)  {
+  const initValue = getInitValue(level);
+  const operationsPairs = getOperationsPairs(initValue, level);
+  const result = operationsPairs[-1][0].getResult();
 }
-
 
 function getInitValue(level) {
-  let min = 1 * level;
-  let max = 20 * level;
-  return getRndInteger(min, max);
+  return getRndIntegerBetween(level + 1, getMaxValue(level));
 }
 
-function getMaxResult(level) {
-  return 40 * level;
+function getOperationsPairs(initValue, level) {
+  const correctOperations = getOperations(initValue, level);
+  const otherOperations = getOperations(initValue, level);
+  return getPairs(correctOperations, otherOperations);
 }
 
-const initValue = getInitValue(level)
-function getCorrectOperations(initValue, level) {
-  const operators = ["+", "*", "-", ":"];
+function getPairs(arr1, arr2) {
+  let pairsArray = [];
+  for (let i = 0; i < arr1.length; i++) {
+    pairsArray.push([arr1[i], arr2[i]]);
+  }
+  return pairsArray;
+}
+
+function getMaxValue(level) {
+  return MAX_INIT_VALUE * level;
+}
+
+function getOperations(initValue, level) {
   let operations = [];
   let x = initValue;
   let count = 1;
-  while (count <= 2) {
+  while (count <= OPERATIONS_LIMIT) {
     let operator = getRndOperator(x, level);
-    let operand;
-    if (operator === ":" && getProperDivisors(x).length == 0) continue;
-    operand = getRndOperand(x, operator, level);
+    if (operator === ":" && isPrime(x)) continue;
+    let operand = getRndOperand(x, operator, level);
     let operation = new Operation(x, operator, operand);
     operations.push(operation);
     x = operation.getResult();
     count++;
   }
+  return operations;
 }
 
 function getRndOperator(initValue, level) {
-
+  if (initValue <= FACTOR_1 * level) return getRndElement(["+", "*"]);
+  if (initValue >= FACTOR_2 * level) return getRndElement(["-", ":"]);
+  return getRndElement(["+",  "-"]);
 }
 
 function getRndOperand(value, operator, level) {
-  let maxResult = getMaxResult(level)
+  let maxResult = getMaxValue(level)
   switch (operator) {
     case "+":
-      return getRndInteger(MIN_DIFFERENCE, maxResult - value);
+      return getRndIntegerBetween(MIN_DIFFERENCE, maxResult - value);
     case "-":
-      return getRndInteger(MIN_DIFFERENCE, value - MIN_DIFFERENCE);
+      return getRndIntegerBetween(MIN_DIFFERENCE, value - MIN_DIFFERENCE);
     case "*":
       let maxFactor = Math.floor(maxResult / value);
-      return getRndInteger(2, maxFactor);
+      return getRndIntegerBetween(2, maxFactor);
     case ":":
       const divisors = getProperDivisors(value);
       return getRndElement(divisors);
@@ -113,12 +105,12 @@ function getRndOperand(value, operator, level) {
   }
 }
 
-function getRndInteger(min, max) {
+function getRndIntegerBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
 }
 
-function getRndBoolean() {
-  return Boolean(getRndInteger(0, 1));
+function getRndElement(arr) {
+  return arr[getRndIntegerBetween(0, arr.length - 1)];
 }
 
 function getProperDivisors(n) {
@@ -134,8 +126,4 @@ function isPrime(n) {
     if (n % i == 0) return false;
   }
   return true;
-}
-
-function getRndElement(arr) {
-  return arr[getRndInteger(0, arr.length - 1)];
 }
