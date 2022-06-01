@@ -1,9 +1,8 @@
-import { initGame, timer, leftBottom } from './game.js';
-import { Operation, initTurn } from './engine';
+import { Operation, initTurn, timer, leftBottom } from './engine.js';
 
 let operation = new Operation(9, "-", 4);
 
-const game = initTurn();
+const game = initTurn(1);
 
 const rightBottom = document.querySelector('.right-bottom');
 const leftTop = document.querySelector('.left-top');

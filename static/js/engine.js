@@ -52,7 +52,7 @@ export function initTurn(level)  {
   const initValue = getInitValue(level);
   const operationsPairs = getOperationsPairs(initValue, level);
   const stringOperationsPairs = parseOperationsToString(operationsPairs);
-  const result = operationsPairs[-1][0].getResult();
+  const result = operationsPairs[operationsPairs.length -1][0].getResult();
   return {
     'initValue': initValue,
     'result': result,
@@ -130,6 +130,14 @@ function getRndElement(arr) {
   return arr[getRndIntegerBetween(0, arr.length - 1)];
 }
 
+function shuffle(pair) {
+  let i = getRndIntegerBetween(0,1);
+  let temp1 = pair[i];
+  let temp2 = pair[1 - i];
+  pair[0] = temp1;
+  pair[1] = temp2;
+}
+
 function getProperDivisors(n) {
   let divisors = [];
   for (let i = 2; i <= n/2; i++) {
@@ -154,4 +162,43 @@ function parseOperationsToString(operationsPairs) {
     ])
   }
   return stringOperationsPairs;
+}
+
+
+export const leftBottom = document.querySelector('.left-bottom');
+
+export function timer() {
+
+    let countDownDate = new Date().getTime() + 10000
+
+
+    let x = setInterval(function () {
+
+
+        let now = new Date().getTime();
+
+
+        let distance = countDownDate - now;
+
+
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let miliseconds = Math.floor((distance % (1000)));
+
+        if (distance < 5000) {
+            document.querySelector(".timer").style.color = "red"
+            document.querySelector(".timer").innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+        } else {
+
+            document.querySelector(".timer").innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+        }
+
+        if (distance < 0 || leftBottom.innerText === 'END') {
+            clearInterval(x);
+            if (leftBottom.innerText !== 'END')
+            {
+                document.querySelector(".timer").innerHTML = "Time Out";
+            }
+        }
+    }, 10);
 }
