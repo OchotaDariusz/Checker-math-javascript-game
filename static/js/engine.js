@@ -51,8 +51,9 @@ export class Operation {
 export function initTurn(level)  {
   const initValue = getInitValue(level);
   const operationsPairs = getOperationsPairs(initValue, level);
-  const stringOperationsPairs = parseOperationsToString(operationsPairs);
+  const stringOperationsPairs = parseOperationsToString(operationsPairs);//zmienić nazwę
   const result = operationsPairs[operationsPairs.length -1][0].getResult();
+  console.log("result = ", result)
   return {
     'initValue': initValue,
     'result': result,
@@ -131,11 +132,12 @@ function getRndElement(arr) {
 }
 
 function shuffle(pair) {
-  let i = getRndIntegerBetween(0,1);
-  let temp1 = pair[i];
-  let temp2 = pair[1 - i];
-  pair[0] = temp1;
-  pair[1] = temp2;
+  let i = Math.round(Math.random());
+  let tmp1 = pair[i];
+  let tmp2 = pair[1 - i];
+  pair[0] = tmp1;
+  pair[1] = tmp2;
+  return pair;
 }
 
 function getProperDivisors(n) {
@@ -156,10 +158,10 @@ function isPrime(n) {
 function parseOperationsToString(operationsPairs) {
   let stringOperationsPairs = [];
   for (let i = 0; i < operationsPairs.length; i++) {
-    stringOperationsPairs.push([
+    stringOperationsPairs.push(shuffle([
         operationsPairs[i][0].parseEndToString(),
         operationsPairs[i][1].parseEndToString()
-    ])
+    ]))
   }
   return stringOperationsPairs;
 }
