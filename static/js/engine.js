@@ -38,7 +38,7 @@ export class Operation {
       case "*":
         return this._operand1 * this._operand2;
       case ":":
-        return this._operand1 / this._operand2;
+        return Math.round(this._operand1 / this._operand2 * 100) / 100;
       default:
         console.log("invalid operation")
     }
@@ -57,7 +57,7 @@ export function initTurn(level)  {
   return {
     'initValue': initValue,
     'result': result,
-    'operations': stringOperationsPairs,
+    'operations': stringOperationsPairs
   }
 }
 
@@ -168,8 +168,9 @@ function parseOperationsToString(operationsPairs) {
 
 
 export const leftBottom = document.querySelector('.left-bottom');
+export const timer = document.querySelector(".timer");
 
-export function timer() {
+export function startTimer() {
 
     let countDownDate = new Date().getTime() + 10000
 
@@ -188,18 +189,18 @@ export function timer() {
         let miliseconds = Math.floor((distance % (1000)));
 
         if (distance < 5000) {
-            document.querySelector(".timer").style.color = "red"
-            document.querySelector(".timer").innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+            timer.style.color = "red"
+            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
         } else {
 
-            document.querySelector(".timer").innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
         }
 
         if (distance < 0 || leftBottom.innerText === 'END') {
             clearInterval(x);
             if (leftBottom.innerText !== 'END')
             {
-                document.querySelector(".timer").innerHTML = "Time Out";
+                timer.innerHTML = "Time Out";
             }
         }
     }, 10);

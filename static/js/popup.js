@@ -112,24 +112,6 @@ const showPopup = element => {
     refreshPopupLink();
 }
 
-// const closeRegisterPopup = () => {
-//     popupRegister.classList.remove('fade-in');
-//     popupRegister.style.display = 'none';
-//     Array.from(gameBox.children).forEach(children => {
-//         children.style.filter = '';
-//     });
-// }
-
-// const showRegisterPopup = () => {
-//     popupRegister.classList.add('fade-in');
-//     popupRegister.classList.remove('fade-out');
-//     popupRegister.style.display = 'flex';
-//     Array.from(gameBox.children).forEach(children => {
-//         children.style.filter = 'blur(4px)';
-//     });
-//     refreshPopupLink();
-// };
-
 popupLink.forEach(link => {
     link.addEventListener('click', () => {
         if (popupRegister.style.display === 'flex') {
