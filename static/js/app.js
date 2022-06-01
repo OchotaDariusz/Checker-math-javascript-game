@@ -3,7 +3,7 @@ import {Operation, initTurn, startTimer, leftBottom, timer} from './engine.js';
 let operation = new Operation(9, "-", 4);
 
 let game = initTurn(1);
-let gameCopy;
+let gameCopy = JSON.parse(JSON.stringify(game));
 
 let score = 0;
 
@@ -111,6 +111,10 @@ function playTurn(again = false) {
         initValue.removeEventListener('click', () => {
             playTurn(true);
         });
+
+        leftBottom.addEventListener('click', () => {
+            initGameButton(leftBottom);
+        });
     } else {
         initValue.removeEventListener('click', playTurn);
         game = initTurn(1);
@@ -125,7 +129,7 @@ function playTurn(again = false) {
 }
 
 function checkForTurnWin() {
-    if (initValue.innerText === goal.innerText.split(" ")[1]) {
+    if (initValue.innerText === goal.innerText.split(" ")[1] && leftBottom.innerText === 'AGAIN') {
         alert('You have won!');
         score++;
         updateScore();
@@ -136,6 +140,10 @@ function checkForTurnWin() {
         alert('You lost!');
         leftBottom.classList.remove('disabled');
         leftBottom.style.pointerEvents = 'auto';
+
+        leftBottom.removeEventListener('click', () => {
+            initGameButton(leftBottom);
+        });
         leftBottom.addEventListener('click', () => {
             playTurn(true);
         });
@@ -145,9 +153,9 @@ function checkForTurnWin() {
 function initGameButton(element) {
     initButton(element);
     nextStep();
-    hideTopButtons();
-    disableButtonsAtEnd();
     checkForTurnWin();
+    hideTopButtons();
+    //disableButtonsAtEnd();
     setOperationButtons();
 }
 
