@@ -1,25 +1,26 @@
-import { Operation, initGame, timer, leftBottom } from './game.js';
+import { initGame, timer, leftBottom } from './game.js';
+import { Operation, initTurn } from './engine';
 
 let operation = new Operation(9, "-", 4);
 
-const game = initGame();
+const game = initTurn();
 
 const rightBottom = document.querySelector('.right-bottom');
 const leftTop = document.querySelector('.left-top');
 const rightTop = document.querySelector('.right-top');
 
 function setOperationButtons() {
-    leftBottom.innerText = game['operationsPair1'][0];
-    rightBottom.innerText = game['operationsPair1'][1];
-    leftTop.innerText = game['operationsPair2'][0];
-    rightTop.innerText = game['operationsPair2'][1];
+    leftBottom.innerText = game['operations'][0][0];
+    rightBottom.innerText = game['operations'][0][1];
+    leftTop.innerText = game['operations'][1][0];
+    rightTop.innerText = game['operations'][1][1];
 }
 
 function nextStep() {
-    game['operationsPair1'][0] = game['operationsPair2'][0];
-    game['operationsPair1'][1] = game['operationsPair2'][1];
-    game['operationsPair2'][0] = 'END';
-    game['operationsPair2'][1] = 'GAME';
+    game['operations'][0][0] = game['operations'][1][0];
+    game['operations'][0][1] = game['operations'][1][1];
+    game['operations'][1][0] = 'END';
+    game['operations'][1][1] = 'GAME';
 }
 
 function hideTopButtons() {
