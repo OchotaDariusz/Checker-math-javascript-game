@@ -184,9 +184,20 @@ i {
     margin-top: -25px;
 }
 
+.points {
+    grid-column: 6 / 7;
+    grid-row: 2 / 3;
+}
+
+.level {
+    grid-column: 6 / 7;
+    grid-row: 4 / 5;
+}
+
 .timer,
 .goal,
-.points {
+.points,
+.level {
     text-shadow: -2px 2px 3px var(--shadow);
     font-size: 24px;
     color: white;
@@ -330,7 +341,8 @@ i {
 
     .timer,
     .goal,
-    .points {
+    .points,
+    .level {
         font-size: 20px;
     }
 
@@ -352,7 +364,8 @@ i {
 
     .timer,
     .goal,
-    .points {
+    .points,
+    .level {
         font-size: 16px;
     }
 

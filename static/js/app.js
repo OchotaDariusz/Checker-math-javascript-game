@@ -8,6 +8,7 @@ let initValue = document.querySelector('div.current-result > span');
 const goal = document.querySelector('.goal');
 const points = document.querySelector('.points');
 const timeLeft = document.querySelector(".timer");
+const visibleLevel = document.querySelector('.level');
 let game, gameCopy, hiddenTopButtons, hasWon, timer;
 let level = 1;
 
@@ -142,6 +143,7 @@ function nextPlay(newLevel=false) {
         level++;
         game = initTurn(level);
         game.score = 0;
+        visibleLevel.innerText = `LEVEL<br>${level}`;
     } else {
         let score = game.score;
         game = initTurn(level);
@@ -253,6 +255,7 @@ function startGame(newGame=true) {
         console.log(game);
         console.log(gameCopy);
     }
+    visibleLevel.innerHTML = `LEVEL<br>${level}`;
     startTimer();
     if (hiddenTopButtons) {
         showTopButtons();
