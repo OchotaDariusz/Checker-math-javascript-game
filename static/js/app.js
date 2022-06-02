@@ -140,6 +140,7 @@ function showTopButtons() {
 }
 
 function nextPlay(newLevel=false) {
+    startTimer();
     enableButtons();
     if (newLevel){
         level++;
