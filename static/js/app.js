@@ -16,7 +16,7 @@ let operation = new Operation(9, "-", 4);
 
 function startTimer() {
 
-    let countDownDate = new Date().getTime() + 10000
+    let countDownDate = new Date().getTime() + 100000
 
 
     timer = setInterval(function () {
@@ -145,7 +145,7 @@ function nextPlay(newLevel=false) {
         level++;
         game = initTurn(level);
         game.score = 0;
-        visibleLevel.innerText = `LEVEL<br>${level}`;
+        visibleLevel.innerHTML = `LEVEL<br>${level}`;
     } else {
         let score = game.score;
         game = initTurn(level);
