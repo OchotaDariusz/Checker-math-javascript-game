@@ -45,6 +45,8 @@ function startTimer() {
             if (leftBottom.innerText !== 'AGAIN')
             {
                 timeLeft.innerHTML = "Time Out";
+                hiddenTopButtons = hideTopButtons();
+                gameLost();
             }
         }
     }, 10);
@@ -104,7 +106,7 @@ function initButton(element) {
 }
 
 function hideTopButtons() {
-    if (leftTop.innerText === 'AGAIN') {
+    if (leftTop.innerText === 'AGAIN' || timeLeft.innerText === 'Time Out') {
         leftTop.style.opacity = '0';
         rightTop.style.opacity = '0';
         leftBottom.style.webkitBoxShadow = 'none';
@@ -173,6 +175,24 @@ function nextLevel() {
     nextPlay(true);
 }
 
+function gameLost() {
+    leftBottom = removeAllEventListeners(leftBottom);
+    rightBottom = removeAllEventListeners(rightBottom);
+
+    leftBottom.addEventListener('click', () => {
+        startGame(false);
+    });
+
+    rightBottom.addEventListener('click', () => {
+        startGame(true);
+    });
+
+    initValue.innerText = 'PLAY AGAIN?';
+
+    leftBottom.innerText = 'AGAIN';
+    rightBottom.innerText = 'NEW GAME';
+}
+
 function nextStep() {
     game.operations[0][0] = game.operations[1][0];
     game.operations[0][1] = game.operations[1][1];
@@ -189,18 +209,7 @@ function nextStep() {
             updateScore();
             disableButtonsAtEnd();
         } else {
-            leftBottom = removeAllEventListeners(leftBottom);
-            rightBottom = removeAllEventListeners(rightBottom);
-
-            leftBottom.addEventListener('click', () => {
-                startGame(false);
-            });
-
-            rightBottom.addEventListener('click', () => {
-                startGame(true);
-            });
-
-            initValue.innerText = 'PLAY AGAIN?';
+            gameLost();
             return;
         }
         if (game.score === 3) {
