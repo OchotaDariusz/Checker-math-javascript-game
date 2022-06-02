@@ -1,88 +1,52 @@
-import {Operation, initTurn, startTimer, leftBottom, timer} from './engine.js';
+import { Operation, initTurn, startTimer, timer } from './engine.js';
+
+let leftBottom = document.querySelector('.left-bottom');
+let rightBottom = document.querySelector('.right-bottom');
+const leftTop = document.querySelector('.left-top');
+const rightTop = document.querySelector('.right-top');
+let initValue = document.querySelector('div.current-result > span');
+const goal = document.querySelector('.goal');
+const points = document.querySelector('.points');
+const timer = document.querySelector(".timer");
+let game, gameCopy, hiddenTopButtons, hasWon;
+let level = 1;
 
 let operation = new Operation(9, "-", 4);
 
-let game = initTurn(1);
-let gameCopy = JSON.parse(JSON.stringify(game));
+function startTimer() {
 
-let score = 0;
-
-const rightBottom = document.querySelector('.right-bottom');
-const leftTop = document.querySelector('.left-top');
-const rightTop = document.querySelector('.right-top');
-
-function setOperationButtons() {
-    leftBottom.innerText = game['operations'][0][0];
-    rightBottom.innerText = game['operations'][0][1];
-    leftTop.innerText = game['operations'][1][0];
-    rightTop.innerText = game['operations'][1][1];
-}
-
-function nextStep() {
-    game['operations'][0][0] = game['operations'][1][0];
-    game['operations'][0][1] = game['operations'][1][1];
-    game['operations'][1][0] = 'AGAIN';
-    game['operations'][1][1] = 'NEXT LEVEL';
-}
-
-function hideTopButtons() {
-    if (leftTop.innerText === 'AGAIN') {
-        leftTop.style.opacity = '0';
-        rightTop.style.opacity = '0';
-        leftBottom.style.webkitBoxShadow = 'none';
-        leftBottom.style.mozBoxShadow = 'none';
-        leftBottom.style.boxShadow = 'none';
-        rightBottom.style.webkitBoxShadow = 'none';
-        rightBottom.style.mozBoxShadow = 'none';
-        rightBottom.style.boxShadow = 'none';
-    }
-}
-
-function showTopButtons() {
-    leftTop.style.opacity = '1';
-    rightTop.style.opacity = '1';
-    leftBottom.style.webkitBoxShadow = '0 -50px 15px -10px var(--shadow)';
-    leftBottom.style.mozBoxShadow = '0 -50px 15px -10px var(--shadow)';
-    leftBottom.style.boxShadow = '0 -50px 15px -10px var(--shadow)';
-    rightBottom.style.webkitBoxShadow = '0 -50px 15px -10px var(--shadow)';
-    rightBottom.style.mozBoxShadow = '0 -50px 15px -10px var(--shadow)';
-    rightBottom.style.boxShadow = '0 -50px 15px -10px var(--shadow)';
-}
-
-const initValue = document.querySelector('div.current-result > span');
-const goal = document.querySelector('.goal');
-const points = document.querySelector('.points');
-
-function updateScore() {
-    points.innerHTML = `POINTS<br>${score}`;
-}
-
-function setInitValue(value) {
-    initValue.innerText = value;
-    game['initValue'] = value;
-    goal.innerText = `GOAL: ${game['result']}`;
-    updateScore();
-}
-
-function startGame() {
-    initValue.removeEventListener('click', startGame);
-    initValue.classList.remove('init-button');
-    setOperationButtons();
-    setInitValue(game['initValue']);
-    startTimer();
-    enableButtons();
-}
-
-function initButton(element) {
-    let operator, operand;
-    [operator, operand] = element.innerText.split(" ");
+    let countDownDate = new Date().getTime() + 10000
 
 
-    operation.operand1 = Number(game['initValue']);
-    operation.operator = operator;
-    operation.operand2 = Number(operand);
+    let x = setInterval(function () {
 
-    setInitValue(operation.getResult());
+
+        let now = new Date().getTime();
+
+
+        let distance = countDownDate - now;
+
+
+        let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        let miliseconds = Math.floor((distance % (1000)));
+
+        if (distance < 5000) {
+            timer.style.color = "red"
+            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+        } else {
+
+            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+        }
+
+        if (distance < 0 || leftBottom.innerText === 'END') {
+            clearInterval(x);
+            if (leftBottom.innerText !== 'END')
+            {
+                timer.innerHTML = "Time Out";
+            }
+        }
+    }, 10);
 }
 
 function enableButtons() {
@@ -105,70 +69,218 @@ function disableButtonsAtEnd() {
     }
 }
 
-function playTurn(again = false) {
-    if (again) {
-        game = gameCopy;
-        initValue.removeEventListener('click', () => {
-            playTurn(true);
-        });
+function setOperationButtons() {
+    leftBottom.innerText = game.operations[0][0];
+    rightBottom.innerText = game.operations[0][1];
+    leftTop.innerText = game.operations[1][0];
+    rightTop.innerText = game.operations[1][1];
+}
 
-        leftBottom.addEventListener('click', () => {
-            initGameButton(leftBottom);
-        });
-    } else {
-        initValue.removeEventListener('click', playTurn);
-        game = initTurn(1);
-        gameCopy = JSON.parse(JSON.stringify(game));
+function removeAllEventListeners(element) {
+    let newElement = element.cloneNode(true);
+    element.parentNode.replaceChild(newElement, element);
+    return newElement;
+}
+
+function updateScore() {
+    points.innerHTML = `POINTS<br>${game.score}`;
+}
+
+function setInitValue(value) {
+    initValue.innerText = value;
+    game.initValue = value;
+}
+
+function initButton(element) {
+    let operator, operand;
+    [operator, operand] = element.innerText.split(" ");
+
+    operation.operand1 = Number(game['initValue']);
+    operation.operator = operator;
+    operation.operand2 = Number(operand);
+
+    setInitValue(operation.getResult());
+}
+
+function hideTopButtons() {
+    if (leftTop.innerText === 'AGAIN') {
+        leftTop.style.opacity = '0';
+        rightTop.style.opacity = '0';
+        leftBottom.style.webkitBoxShadow = 'none';
+        leftBottom.style.mozBoxShadow = 'none';
+        leftBottom.style.boxShadow = 'none';
+        rightBottom.style.webkitBoxShadow = 'none';
+        rightBottom.style.mozBoxShadow = 'none';
+        rightBottom.style.boxShadow = 'none';
+        return true;
     }
-    initValue.classList.remove('init-button');
-    setInitValue(game['initValue']);
-    startTimer();
-    showTopButtons();
-    enableButtons();
-    setOperationButtons();
+    return false;
 }
 
 function checkForTurnWin() {
     if (initValue.innerText === goal.innerText.split(" ")[1] && leftBottom.innerText === 'AGAIN') {
-        alert('You have won!');
-        score++;
-        updateScore();
-        initValue.innerText = 'NEXT ROUND';
-        initValue.classList.add('init-button');
-        initValue.addEventListener('click', playTurn);
+        return true;
     } else if (timer.innerText === "Time Out" || leftBottom.innerText === 'AGAIN' && initValue.innerText !== goal.innerText.split(" ")[1]) {
-        alert('You lost!');
-        leftBottom.classList.remove('disabled');
-        leftBottom.style.pointerEvents = 'auto';
-
-        leftBottom.removeEventListener('click', () => {
-            initGameButton(leftBottom);
-        });
-        leftBottom.addEventListener('click', () => {
-            playTurn(true);
-        });
+        return false;
     }
 }
 
-function initGameButton(element) {
-    initButton(element);
-    nextStep();
-    checkForTurnWin();
-    hideTopButtons();
-    //disableButtonsAtEnd();
+function showTopButtons() {
+    leftTop.style.opacity = '1';
+    rightTop.style.opacity = '1';
+    leftBottom.style.webkitBoxShadow = '0 -50px 15px -10px var(--shadow)';
+    leftBottom.style.mozBoxShadow = '0 -50px 15px -10px var(--shadow)';
+    leftBottom.style.boxShadow = '0 -50px 15px -10px var(--shadow)';
+    rightBottom.style.webkitBoxShadow = '0 -50px 15px -10px var(--shadow)';
+    rightBottom.style.mozBoxShadow = '0 -50px 15px -10px var(--shadow)';
+    rightBottom.style.boxShadow = '0 -50px 15px -10px var(--shadow)';
+}
+
+function nextPlay(newLevel=false) {
+    enableButtons();
+    if (newLevel){
+        level++;
+        game = initTurn(level);
+        game.score = 0;
+    } else {
+        let score = game.score;
+        game = initTurn(level);
+        game.score = score;
+    }
+    gameCopy = JSON.parse(JSON.stringify(game));
+    goal.innerText = `GOAL: ${game.result}`;
+    updateScore();
+
+    if (hiddenTopButtons) {
+        showTopButtons();
+        hiddenTopButtons = false;
+    }
+
+    initValue = removeAllEventListeners(initValue);
+    initValue.classList.remove('init-button');
+    initValue.innerText = game.initValue;
+
     setOperationButtons();
 }
 
-leftBottom.addEventListener('click', () => {
-    initGameButton(leftBottom);
-});
+function nextTurn(){
+    nextPlay();
+}
 
-rightBottom.addEventListener('click', () => {
-    initGameButton(rightBottom);
-});
+function nextLevel() {
+    nextPlay(true);
+}
 
-initValue.innerText = 'START';
-initValue.classList.add('init-button');
-initValue.addEventListener('click', startGame);
+function nextStep() {
+    game.operations[0][0] = game.operations[1][0];
+    game.operations[0][1] = game.operations[1][1];
+    game.operations[1][0] = 'AGAIN';
+    game.operations[1][1] = 'NEW GAME';
+    setOperationButtons();
 
-disableButtons();
+    if (hiddenTopButtons) {
+        // check result
+        hasWon = checkForTurnWin(); //result good/bad
+        if (hasWon) {
+            game.score++;
+            updateScore();
+            disableButtonsAtEnd();
+        } else {
+            leftBottom = removeAllEventListeners(leftBottom);
+            rightBottom = removeAllEventListeners(rightBottom);
+
+            leftBottom.addEventListener('click', () => {
+                startGame(false);
+            });
+
+            rightBottom.addEventListener('click', () => {
+                startGame(true);
+            });
+
+            initValue.innerText = 'PLAY AGAIN?';
+            return;
+        }
+        if (game.score === 3) {
+            // next level, set score to 0
+            alert('next level');
+            initValue.innerText = 'NEXT LEVEL';
+            initValue.classList.add('init-button');
+            initValue.addEventListener('click', () => {
+                nextLevel();
+            });
+        } else {
+            // next round
+            initValue.innerText = 'NEXT TURN';
+            initValue.classList.add('init-button');
+            initValue.addEventListener('click', () => {
+                nextTurn();
+            });
+        }
+    }
+    hiddenTopButtons = hideTopButtons();
+}
+
+function initGameButton(element) {
+    console.log('level', level);
+    initButton(element);
+    nextStep();
+}
+
+function initializeGameButtons() {
+    leftBottom = removeAllEventListeners(leftBottom);
+    rightBottom = removeAllEventListeners(rightBottom);
+
+    leftBottom.addEventListener('click', () => {
+        initGameButton(leftBottom);
+    });
+
+    rightBottom.addEventListener('click', () => {
+        initGameButton(rightBottom);
+    });
+
+}
+
+function startGame(newGame=true) {
+    if (newGame) {
+        level = 1;
+        game = initTurn(level);
+        game.score = 0;
+        gameCopy = JSON.parse(JSON.stringify(game));
+    } else {
+        //play again
+        game = JSON.parse(JSON.stringify(gameCopy));
+        console.log(game);
+        console.log(gameCopy);
+    }
+
+    if (hiddenTopButtons) {
+        showTopButtons();
+        hiddenTopButtons = false;
+    }
+
+    updateScore();
+    goal.innerText = `GOAL: ${game.result}`;
+
+    initValue = removeAllEventListeners(initValue);
+    initValue.classList.remove('init-button');
+    initValue.innerText = game.initValue;
+
+    setOperationButtons();
+
+    initializeGameButtons();
+
+}
+
+function initStartGame() {
+    initValue.innerText = 'START';
+    initValue.classList.add('init-button');
+    initValue.addEventListener('click', () => {
+        startGame(true);
+    });
+}
+
+function main() {
+    initStartGame();
+}
+
+main();
