@@ -1,8 +1,8 @@
-const MIN_DIFFERENCE = 3;
+const MIN_DIFFERENCE = 2;
 const OPERATIONS_LIMIT = 2;
 const FACTOR_1 = 12;
 const FACTOR_2 = 18;
-const MAX_INIT_VALUE = 30;
+const MAX_INIT_VALUE = 25;
 
 
 export class Operation {
@@ -65,10 +65,26 @@ function getInitValue(level) {
   return getRndIntegerBetween(level + 1, getMaxValue(level));
 }
 
+function getMinDifference(level) {
+ return MIN_DIFFERENCE * level;
+}
+
 function getOperationsPairs(initValue, level) {
   const correctOperations = getOperations(initValue, level);
-  const otherOperations = getOperations(initValue, level);
+  let otherOperations;
+  do {
+    otherOperations = getOperations(initValue, level);
+  } while (areDuplicates(correctOperations, otherOperations))
   return getPairs(correctOperations, otherOperations);
+}
+
+function areDuplicates (operationsArr1, operationsArr2) {
+  for (let i = 0; i < operationsArr1.length; i++){
+    if (operationsArr1[i].parseEndToString() === operationsArr2[i].parseEndToString()){
+      return true;
+    }
+  }
+  return false;
 }
 
 function getPairs(arr1, arr2) {
@@ -107,11 +123,12 @@ function getRndOperator(initValue, level) {
 
 function getRndOperand(value, operator, level) {
   let maxResult = getMaxValue(level)
+  let minDifference = getMinDifference(level)
   switch (operator) {
     case "+":
-      return getRndIntegerBetween(MIN_DIFFERENCE, maxResult - value);
+      return getRndIntegerBetween(minDifference, maxResult - value);
     case "-":
-      return getRndIntegerBetween(MIN_DIFFERENCE, value - MIN_DIFFERENCE);
+      return getRndIntegerBetween(minDifference, value - minDifference);
     case "*":
       let maxFactor = Math.floor(maxResult / value);
       return getRndIntegerBetween(2, maxFactor);
@@ -165,7 +182,6 @@ function parseOperationsToString(operationsPairs) {
   }
   return stringOperationsPairs;
 }
-
 
 export const leftBottom = document.querySelector('.left-bottom');
 
