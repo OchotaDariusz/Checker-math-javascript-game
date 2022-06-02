@@ -1,4 +1,4 @@
-import { Operation, initTurn, startTimer, timer } from './engine.js';
+import { Operation, initTurn } from './engine.js';
 
 let leftBottom = document.querySelector('.left-bottom');
 let rightBottom = document.querySelector('.right-bottom');
@@ -7,8 +7,8 @@ const rightTop = document.querySelector('.right-top');
 let initValue = document.querySelector('div.current-result > span');
 const goal = document.querySelector('.goal');
 const points = document.querySelector('.points');
-const timer = document.querySelector(".timer");
-let game, gameCopy, hiddenTopButtons, hasWon;
+const timeLeft = document.querySelector(".timer");
+let game, gameCopy, hiddenTopButtons, hasWon, timer;
 let level = 1;
 
 let operation = new Operation(9, "-", 4);
@@ -18,7 +18,7 @@ function startTimer() {
     let countDownDate = new Date().getTime() + 10000
 
 
-    let x = setInterval(function () {
+    timer = setInterval(function () {
 
 
         let now = new Date().getTime();
@@ -32,18 +32,18 @@ function startTimer() {
         let miliseconds = Math.floor((distance % (1000)));
 
         if (distance < 5000) {
-            timer.style.color = "red"
-            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+            timeLeft.style.color = "red"
+            timeLeft.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
         } else {
 
-            timer.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
+            timeLeft.innerHTML = minutes + "m " + seconds + "s " + miliseconds + "ms";
         }
 
-        if (distance < 0 || leftBottom.innerText === 'END') {
-            clearInterval(x);
-            if (leftBottom.innerText !== 'END')
+        if (distance < 0 || leftBottom.innerText === 'AGAIN') {
+            clearInterval(timer);
+            if (leftBottom.innerText !== 'AGAIN')
             {
-                timer.innerHTML = "Time Out";
+                timeLeft.innerHTML = "Time Out";
             }
         }
     }, 10);
@@ -179,6 +179,7 @@ function nextStep() {
     setOperationButtons();
 
     if (hiddenTopButtons) {
+        clearInterval(timer);
         // check result
         hasWon = checkForTurnWin(); //result good/bad
         if (hasWon) {
@@ -252,7 +253,7 @@ function startGame(newGame=true) {
         console.log(game);
         console.log(gameCopy);
     }
-
+    startTimer();
     if (hiddenTopButtons) {
         showTopButtons();
         hiddenTopButtons = false;
